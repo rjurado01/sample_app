@@ -20,21 +20,28 @@ module SessionsHelper
 		user == current_user
 	end
 
+ 	def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to signin_path, notice: "Please sign in."
+    end
+  end
+
 	def sign_out
 		self.current_user = nil
 		cookies.delete(:remember_token)
 	end
 
   def redirect_back_or(default)
-		redirect_to(edit_user_path(default)) if session[:return_to]
-		redirect_to(default) unless session[:return_to]
+		#redirect_to(edit_user_path(default)) if session[:return_to]
+		#redirect_to(default) unless session[:return_to]
 
-    #redirect_to(session[:return_to] || default)
+    redirect_to(session[:return_to] || default)
     session.delete(:return_to)
   end
 
   def store_location
-    # session[:return_to] = request.fullpath
-		session[:return_to] = true
+    session[:return_to] = request.fullpath
+		#session[:return_to] = true
   end
 end
